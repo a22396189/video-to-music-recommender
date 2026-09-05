@@ -1,0 +1,30 @@
+# secrets / local config
+.env
+.cache
+
+# generated data / models
+frames/
+blip_best/
+data/
+training_history.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# media
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# large / personal files
+Final Project.pptx
+*.pptx

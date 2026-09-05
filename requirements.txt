@@ -1,0 +1,22 @@
+# Core ML
+torch
+torchvision
+transformers>=4.44
+accelerate
+datasets
+
+# Vision / video
+opencv-python
+pillow
+
+# LLM + music APIs
+google-generativeai
+spotipy
+requests
+
+# App + utils
+streamlit
+python-dotenv
+tqdm
+numpy
+matplotlib
