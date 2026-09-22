@@ -3,12 +3,12 @@
 End-to-end system that recommends background music for a video based on its
 visual content and atmosphere.
 
-**Live demo (no install needed): [video-to-music-recommender.vercel.app](https://video-to-music-recommender.vercel.app)**
+**Use it now, no install needed: [video-to-music-recommender.vercel.app](https://video-to-music-recommender.vercel.app)**
 
 ```
 frames  ->  BLIP caption per frame  ->  LLM aggregates to 1 summary
         ->  LLM infers 2-3 genres   ->  Spotify / Last.fm / Apple charts / iTunes -> real tracks
-        ->  Streamlit web demo (or the hosted Vercel demo linked above)
+        ->  Streamlit web app (or the hosted Vercel app linked above)
 ```
 
 ## Files
@@ -17,7 +17,7 @@ frames  ->  BLIP caption per frame  ->  LLM aggregates to 1 summary
 |------|------|
 | `BLIP caption fine-tuning.ipynb` | Fine-tunes BLIP on a custom caption dataset -> `./blip_best/` |
 | `video_to_music_recommendation.py` | Core pipeline functions + a CLI |
-| `app.py` | Streamlit web demo |
+| `app.py` | Streamlit web app |
 | `webapp/` | Next.js port deployed on Vercel — see [Vercel deployment](#vercel-deployment) below |
 
 ## Setup (VSCode, Windows)
@@ -78,7 +78,7 @@ CLI:
 python video_to_music_recommendation.py path\to\video.mp4 --fps 1
 ```
 
-Web demo:
+Web app:
 
 ```bash
 streamlit run app.py
@@ -86,7 +86,7 @@ streamlit run app.py
 
 ## Vercel deployment
 
-The hosted demo above (`webapp/`) is a separate Next.js rewrite of this
+The hosted app above (`webapp/`) is a separate Next.js rewrite of this
 pipeline, built so it runs entirely on **Vercel serverless functions** — no
 Python, torch, or ffmpeg on the server:
 
