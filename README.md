@@ -3,6 +3,8 @@
 End-to-end system that recommends background music for a video based on its
 visual content and atmosphere.
 
+**Live demo (no install needed): [video-to-music-recommender.vercel.app](https://video-to-music-recommender.vercel.app)**
+
 ```
 frames  ->  BLIP caption per frame  ->  LLM aggregates to 1 summary
         ->  LLM infers 2-3 genres   ->  Spotify Web API returns real tracks
@@ -16,6 +18,7 @@ frames  ->  BLIP caption per frame  ->  LLM aggregates to 1 summary
 | `BLIP caption fine-tuning.ipynb` | Fine-tunes BLIP on a custom caption dataset -> `./blip_best/` |
 | `video_to_music_recommendation.py` | Core pipeline functions + a CLI |
 | `app.py` | Streamlit web demo |
+| `webapp/` | Next.js port deployed on Vercel — see [Vercel deployment](#vercel-deployment) below |
 
 ## Setup (VSCode, Windows)
 
@@ -80,6 +83,45 @@ Web demo:
 ```bash
 streamlit run app.py
 ```
+
+## Vercel deployment
+
+The hosted demo above (`webapp/`) is a separate Next.js rewrite of this
+pipeline, built so it runs entirely on **Vercel serverless functions** — no
+Python, torch, or ffmpeg on the server:
+
+```
+<video> + <canvas>  ->  frames sampled in the browser (no ffmpeg/OpenCV needed)
+                    ->  POST /api/analyze  (one Vercel serverless function)
+                          -> Gemini vision: 1 caption per frame   (replaces local BLIP)
+                          -> Gemini text:   captions -> 1 summary
+                          -> Gemini text:   summary -> 2-3 genres
+                          -> Spotify / Last.fm / Apple charts / iTunes -> tracks
+```
+
+Two things had to change from the Python pipeline to fit a serverless
+platform:
+
+- **Frame extraction** moved from server-side OpenCV to the browser: a
+  hidden `<video>` element seeks to sampled timestamps and each frame is
+  drawn to a `<canvas>` and read back as a downscaled JPEG, so the server
+  never has to decode video or ship an ffmpeg binary.
+- **Frame captioning** moved from a locally-run BLIP model to **Gemini's own
+  multimodal vision input** — all sampled frames are sent in one batched
+  Gemini request. This also sidesteps a dead end: Hugging Face's serverless
+  Inference API no longer supports the image-to-text task, so BLIP itself
+  isn't reachable that way anymore.
+
+Everything else (the LLM summary/genre prompts, and the Spotify → Last.fm →
+Apple charts → iTunes track-search fallback chain) is a direct 1:1 port of
+`video_to_music_recommendation.py`.
+
+Deploying your own copy: import this repo on
+[vercel.com/new](https://vercel.com/new), set **Root Directory** to
+`webapp` (the app lives in that subfolder, not the repo root), and add a
+`GEMINI_API_KEY` environment variable. Full instructions, env var table, and
+the serverless time/size limits this design works around are in
+[`webapp/README.md`](webapp/README.md).
 
 ## Notes
 
