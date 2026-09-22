@@ -7,8 +7,8 @@ visual content and atmosphere.
 
 ```
 frames  ->  BLIP caption per frame  ->  LLM aggregates to 1 summary
-        ->  LLM infers 2-3 genres   ->  Spotify Web API returns real tracks
-        ->  Streamlit web demo
+        ->  LLM infers 2-3 genres   ->  Spotify / Last.fm / Apple charts / iTunes -> real tracks
+        ->  Streamlit web demo (or the hosted Vercel demo linked above)
 ```
 
 ## Files
